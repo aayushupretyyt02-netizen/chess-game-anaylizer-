@@ -13,7 +13,7 @@ app.use(express.json());
 
 // Step 1: Check the operating system to decide which file to use
 const isWindows = os.platform() === 'win32';
-const stockfishExe = 'stockfish-ubuntu-x86-64-avx2';
+const stockfishExe = isWindows ? 'stockfish-windows-x86-64-avx2.exe' : './stockfish';
 
 // Step 2: Check if that chosen file actually exists before starting
 try {
@@ -93,3 +93,4 @@ app.listen(3000, () => {
     console.log(`Using engine: ${stockfishExe}`);
 
 });
+
