@@ -1,36 +1,17 @@
 import express from 'express';
 import cors from 'cors';
 import { spawn } from 'child_process';
-import path from 'path';
-import os from 'os';
-import fs from 'fs';
 
 const app = express();
 app.use(cors());
 app.use(express.json());
 
-// --- START OF IMPORTANT CODE ---
-
-// Step 1: Check the operating system to decide which file to use
-const isWindows = os.platform() === 'win32';
-const stockfishExe = isWindows ? 'stockfish-windows-x86-64-avx2.exe' : './stockfish';
-
-// Step 2: Check if that chosen file actually exists before starting
-try {
-    fs.statSync(stockfishExe);
-} catch (e) {
-    console.error(`\nFATAL ERROR: Stockfish executable not found!`);
-    console.error(`The server is looking for a file named "${stockfishExe}" in this folder, but it wasn't found.`);
-    console.error(`Please make sure the file is in the same folder as server.js.\n`);
-    process.exit(1); // Exit the application if file is not found
-}
-
-// --- END OF IMPORTANT CODE ---
-
+// The name of the Stockfish file as we saved it in the Dockerfile
+const stockfishExe = './stockfish';
 
 function getEngineAnalysis(fen, depth = 15) {
   return new Promise((resolve, reject) => {
-    const engine = spawn(path.join(process.cwd(), stockfishExe));
+    const engine = spawn(stockfishExe);
 
     let bestmove = '';
     let analysisData = { score: null, mate: null };
@@ -44,7 +25,7 @@ function getEngineAnalysis(fen, depth = 15) {
       for (const line of lines) {
         if (line.startsWith('bestmove')) {
           bestmove = line.split(' ')[1];
-          engine.stdin.write('quit\n');
+          engine.stdin.end(); // Gracefully close the process
           resolve({ bestmove, analysis: analysisData });
         } else if (line.startsWith('info depth')) {
           const parts = line.split(' ');
@@ -61,10 +42,18 @@ function getEngineAnalysis(fen, depth = 15) {
         }
       }
     });
+    
+    // Handle errors properly
+    engine.on('error', (err) => {
+      console.error("Failed to start Stockfish process:", err);
+      reject(new Error("Failed to start Stockfish process."));
+    });
 
-    engine.on('error', (err) => reject(err));
     engine.on('close', (code) => {
-      if (!bestmove) reject(new Error(`Engine exited with code ${code} before finding a move.`));
+      if (!bestmove) {
+        console.error(`Engine exited early with code ${code}`);
+        reject(new Error(`Engine exited with code ${code} before finding a move.`));
+      }
     });
 
     // Send commands to the engine
@@ -77,20 +66,23 @@ function getEngineAnalysis(fen, depth = 15) {
 
 app.post('/analyze-position', async (req, res) => {
     const { fen, depth } = req.body;
-    if (!fen) return res.status(400).json({ error: 'FEN is required' });
+    if (!fen) {
+        return res.status(400).json({ error: 'FEN is required' });
+    }
 
     try {
         const result = await getEngineAnalysis(fen, depth || 15);
         res.json(result);
     } catch (error) {
+        // Send a proper error message to the client instead of crashing the server
         console.error("Stockfish process error:", error.message);
-        res.status(500).json({ error: 'Failed to get analysis from engine process' });
+        res.status(500).json({ error: 'Failed to get analysis from the engine.' });
     }
 });
 
-// Purani line ko isse badlein
-app.listen(3000, '0.0.0.0', () => {
-    console.log(`Server running and listening on port 3000`);
+// Use the PORT provided by Render, or 3000 for local testing
+const PORT = process.env.PORT || 3000;
+app.listen(PORT, '0.0.0.0', () => {
+    console.log(`Server running on port ${PORT}`);
     console.log(`Using engine: ${stockfishExe}`);
 });
-
