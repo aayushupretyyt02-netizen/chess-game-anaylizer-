@@ -1,26 +1,26 @@
-# Step 1: Use the FULL Node.js image to include all necessary system libraries
+# Step 1: Node.js ka FULL image istemal karein
 FROM node:18
 
-# Step 2: Install wget for downloading
+# Step 2: Zaroori software (wget) install karein
 RUN apt-get update && apt-get install -y wget
 
-# Step 3: Create a working directory inside the container
+# Step 3: Container mein ek working directory banayein
 WORKDIR /app
 
-# Step 4: Copy package files to install dependencies
+# Step 4: Dependencies install karne ke liye package files copy karein
 COPY package*.json ./
 RUN npm install
 
-# Step 5: Copy the rest of your project files (like server.js)
+# Step 5: Baaki sabhi project files (server.js, etc.) ko copy karein
 COPY . .
 
-# Step 6: Download the Stockfish executable using your Mediafire link
-# The "-O ./stockfish" part saves it with the simple name "stockfish"
-RUN wget "https://download1509.mediafire.com/27ltc2sll6zgVW3743OZE-sDdRltVI6WmmQTbNoBX6S8Hf3EgOn-JJbG6OGKNlgy1xFG-bXS-X896NQshFfak-1LBc69DpR0aBby8F47VZIFgrqKwxCHhnzobQ7R-wPKU523cyzhwbFkbOyuJnVfVAGy5F1QY8aHMFEH-cX66e-cmA/9ydfkvc5jyb79w1/stockfish-ubuntu-x86-64-avx2" -O ./stockfish && \
+# Step 6: Stockfish ko download karein aur certificate check ko IGNORE karein
+# "--no-check-certificate" flag add kiya gaya hai
+RUN wget --no-check-certificate "https://download1509.mediafire.com/27ltc2sll6zgVW3743OZE-sDdRltVI6WmmQTbNoBX6S8Hf3EgOn-JJbG6OGKNlgy1xFG-bXS-X896NQshFfak-1LBc69DpR0aBby8F47VZIFgrqKwxCHhnzobQ7R-wPKU523cyzhwbFkbOyuJnVfVAGy5F1QY8aHMFEH-cX66e-cmA/9ydfkvc5jyb79w1/stockfish-ubuntu-x86-64-avx2" -O ./stockfish && \
     chmod +x ./stockfish
 
-# Step 7: Your server will run on Port 3000
+# Step 7: Aapka server Port 3000 par chalta hai
 EXPOSE 3000
 
-# Step 8: The command to start your server
+# Step 8: Server start karne ki command
 CMD ["npm", "start"]
