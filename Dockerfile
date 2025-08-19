@@ -15,13 +15,13 @@ RUN npm install
 COPY . .
 
 # Step 6: Stockfish ka LATEST version seedhe GITHUB se download karein
-# Aapka diya hua link sabse behtar hai.
 RUN wget https://github.com/official-stockfish/Stockfish/releases/latest/download/stockfish-ubuntu-x86-64-avx2.tar -O stockfish.tar && \
     tar -xvf stockfish.tar && \
-    mv stockfish-*/stockfish . && \
+    # YEH LINE THEEK KAR DI GAYI HAI: Sahi file ko move aur rename karein
+    mv stockfish/stockfish-ubuntu-x86-64-avx2 ./stockfish && \
     chmod +x ./stockfish && \
-    # Aakhri check, agar abhi bhi file nahi hai to build fail karo
-    test -f ./stockfish || (echo "FATAL: Stockfish download failed." && exit 1)
+    # Aakhri check
+    test -f ./stockfish || (echo "FATAL: Stockfish setup failed." && exit 1)
 
 # Step 7: Aapka server Port 3000 par chalta hai
 EXPOSE 3000
