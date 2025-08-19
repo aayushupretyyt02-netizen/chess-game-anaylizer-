@@ -88,9 +88,9 @@ app.post('/analyze-position', async (req, res) => {
     }
 });
 
-app.listen(3000, () => {
-    console.log(`Server running on http://localhost:3000`);
+// Purani line ko isse badlein
+app.listen(3000, '0.0.0.0', () => {
+    console.log(`Server running and listening on port 3000`);
     console.log(`Using engine: ${stockfishExe}`);
-
 });
 
