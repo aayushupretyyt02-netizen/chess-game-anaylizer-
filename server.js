@@ -13,7 +13,7 @@ app.use(express.json());
 
 // Step 1: Check the operating system to decide which file to use
 const isWindows = os.platform() === 'win32';
-const stockfishExe = isWindows ? 'stockfish-windows-x86-64-avx2.exe' : './stockfish';
+const stockfishExe = 'stockfish-ubuntu-x86-64-avx2';
 
 // Step 2: Check if that chosen file actually exists before starting
 try {
@@ -91,4 +91,5 @@ app.post('/analyze-position', async (req, res) => {
 app.listen(3000, () => {
     console.log(`Server running on http://localhost:3000`);
     console.log(`Using engine: ${stockfishExe}`);
+
 });
