@@ -16,7 +16,7 @@ COPY . .
 
 # Step 6: Stockfish ko download karein aur certificate check ko IGNORE karein
 # "--no-check-certificate" flag add kiya gaya hai
-RUN wget --no-check-certificate "https://download1509.mediafire.com/27ltc2sll6zgVW3743OZE-sDdRltVI6WmmQTbNoBX6S8Hf3EgOn-JJbG6OGKNlgy1xFG-bXS-X896NQshFfak-1LBc69DpR0aBby8F47VZIFgrqKwxCHhnzobQ7R-wPKU523cyzhwbFkbOyuJnVfVAGy5F1QY8aHMFEH-cX66e-cmA/9ydfkvc5jyb79w1/stockfish-ubuntu-x86-64-avx2" -O ./stockfish && \
+RUN wget --no-check-certificate "https://download1509.mediafire.com/msgb80maasrgJNp42T8d_O84APKlXW3aPyqsgWg7AoF9sXdcXGgkk53FOL7t1cAc_9QyHudvQYvq2dh06lFM5hJxoAsAOA6gh3EVL-S6a6KY-hzWCcoleXjWD4giZ38lVd8ayw4pOiVZ8EFnu0uinPwNRh475gxly-Q9nUTYFB51hw/9ydfkvc5jyb79w1/stockfish-ubuntu-x86-64-avx2" -O ./stockfish && \
     chmod +x ./stockfish
 
 # Step 7: Aapka server Port 3000 par chalta hai
@@ -24,3 +24,4 @@ EXPOSE 3000
 
 # Step 8: Server start karne ki command
 CMD ["npm", "start"]
+
