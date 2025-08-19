@@ -1,0 +1,24 @@
+# Node.js ka base image istemal karein
+FROM node:18-slim
+
+# Container mein ek working directory banayein
+WORKDIR /app
+
+# Dependencies install karne ke liye package files copy karein
+COPY package*.json ./
+RUN npm install
+
+# Baaki sabhi project files ko copy karein
+COPY . .
+
+# ZAROORI: Stockfish file ko chalne ki permission dein
+RUN chmod +x ./stockfish-ubuntu-x86-64-avx2
+
+# This name should match the Linux file EXACTLY
+RUN chmod +x ./stockfish-windows-x86-64-avx2.exe
+
+# Aapka server Port 3000 par chalta hai
+EXPOSE 3000
+
+# Server start karne ki command
+CMD ["npm", "start"]
