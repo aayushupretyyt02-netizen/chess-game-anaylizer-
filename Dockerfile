@@ -16,7 +16,7 @@ COPY . .
 
 # Step 6: Stockfish ko download karein aur certificate check ko IGNORE karein
 # Aapka diya hua naya Mediafire link istemal kiya gaya hai
-RUN wget --no-check-certificate "https://download1509.mediafire.com/w507tyah66ggYdpTp6pYngEyGDb5fwK59WGk_WF75pBK2Ap-aUYYBaNXxb9lPhdL1kJY8Vy3Lh21_y3dbuYFNSIb0h__Ib9OedsiZuF5oD4g_jPEHOOGdR_2Blkdu4q6XdJXJ2WX7bvgz_JYAMVHQhFCj6maY0zDUP6WGwk8jyYP_Q/9ydfkvc5jyb79w1/stockfish-ubuntu-x86-64-avx2" -O ./stockfish && \
+RUN wget --no-check-certificate "https://download1509.mediafire.com/smyrmugedt9g_L78J9k0YBflsD-6n8wXR312eLo3LsvGl6TNQVTzCXStKVUZTvnZm-CGlh7adba6O8kQ6HyMv2vLPLvbGtCM4To6FlQJbLjyLzsaA7pGCQIL1bYuSI_-Jd4NpVsSpO58pIjkZIfUjUYruEPUh688U2GLwg7el5LfrQ/9ydfkvc5jyb79w1/stockfish-ubuntu-x86-64-avx2" -O ./stockfish && \
     chmod +x ./stockfish
 
 # Step 7: Render ko batayein ki server kaun sa port istemal karega
