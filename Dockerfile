@@ -1,29 +1,27 @@
-# Step 1: Node.js ka base environment istemal karein
+# Step 1: Use the official Node.js base environment
 FROM node:18-slim
 
-# Step 2: Zaroori software (wget, tar) install karein
-# wget download karne ke liye aur tar file extract karne ke liye hai
-RUN apt-get update && apt-get install -y wget tar
+# Step 2: Install necessary software (wget for downloading)
+RUN apt-get update && apt-get install -y wget bzip2
 
-# Step 3: Container mein ek working directory banayein
+# Step 3: Create a working directory inside the container
 WORKDIR /app
 
-# Step 4: Dependencies install karne ke liye package files copy karein
+# Step 4: Copy package files to install dependencies
 COPY package*.json ./
 RUN npm install
 
-# Step 5: Baaki sabhi project files (server.js, etc.) ko copy karein
+# Step 5: Copy the rest of your project files (like server.js)
 COPY . .
 
-# Step 6: Stockfish download, extract, aur setup karein
-# Yeh Stockfish ki website se file download karke use chalane layak banayega
-RUN wget https://stockfishchess.org/files/stockfish-ubuntu-x86-64-avx2.tar -O stockfish.tar && \
-    tar -xvf stockfish.tar && \
-    mv stockfish-*/stockfish . && \
+# Step 6: Download, extract, and set up the correct Stockfish version
+RUN wget https://stockfishchess.org/files/stockfish-16.1-linux-x86-64-avx2.tar.bz2 -O stockfish.tar.bz2 && \
+    tar -xjvf stockfish.tar.bz2 && \
+    mv stockfish-16.1-linux-x86-64-avx2/stockfish . && \
     chmod +x ./stockfish
 
-# Step 7: Aapka server Port 3000 par chalta hai
+# Step 7: Your server runs on Port 3000
 EXPOSE 3000
 
-# Step 8: Server start karne ki command
+# Step 8: The command to start your server
 CMD ["npm", "start"]
